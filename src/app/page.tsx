@@ -1,17 +1,17 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/UserContext';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 export default function Home() {
   const { setUser } = useUser();
   const router = useRouter();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,20 +22,37 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
-    if (form.username === 'test' && form.password === 'test') {
+    try {
+      const response = await fetch("http://localhost:3001/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: form.username,
+          password: form.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Invalid credentials");
+      }
+
       setUser({
         username: form.username,
         password: form.password,
       });
 
       setLoading(false);
-      setForm({ username: '', password: '' });
-      router.push('/welcome');
-    } else {
+      setForm({ username: "", password: "" });
+      router.push("/welcome");
+    } catch (err) {
       setLoading(false);
-      setError('Invalid credentials');
+      setError((err as Error).message);
     }
   };
 
@@ -46,7 +63,10 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-center text-gray-800">Login</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
           <div className="flex flex-col gap-2">
-            <label htmlFor="username" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="text-sm font-medium text-gray-700"
+            >
               Username
             </label>
             <input
@@ -60,7 +80,10 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -79,7 +102,7 @@ export default function Home() {
             className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
             disabled={loading}
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
       </main>
