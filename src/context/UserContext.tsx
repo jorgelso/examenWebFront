@@ -7,9 +7,9 @@ interface UserContextType {
 }
 
 interface User {
-  username: string;
-  password: string;
-}
+    fullName: string;
+    ticketNumber: string;
+  }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 

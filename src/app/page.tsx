@@ -43,8 +43,8 @@ export default function Home() {
       }
 
       setUser({
-        username: form.username,
-        password: form.password,
+        fullName: data.user.fullName,
+        ticketNumber: data.user.ticketNumber,
       });
 
       setLoading(false);

@@ -18,7 +18,7 @@ export default function WelcomePage() {
   return (
     <div className="flex flex-col min-h-screen items-center justify-center">
       <h1 className="text-3xl font-bold text-green-600">
-        Bienvenido, {user.username}, disfruta tu experiencia en GreenPark
+        Bienvenido, {user.fullName}, disfruta tu experiencia en GreenPark
       </h1>
     </div>
   );
